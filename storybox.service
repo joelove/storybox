@@ -1,0 +1,16 @@
+[Unit]
+Description=Storybox RFID Audio Player
+After=sound.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/home/pi/storybox
+ExecStart=/home/pi/storybox/venv/bin/python src/storybox.py
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
