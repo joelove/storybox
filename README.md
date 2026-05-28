@@ -1,6 +1,6 @@
 # Storybox
 
-RFID-triggered audio player for Raspberry Pi Zero W. Place an RFID card on the reader to play its mapped audio clip; remove the card to stop playback.
+RFID-triggered audio player for Raspberry Pi Zero W. Place an RFID tag on the reader to play its mapped audio clip; remove the tag to stop playback.
 
 ## Hardware
 
@@ -55,7 +55,7 @@ aplay -D hw:1,0 /usr/share/sounds/alsa/Front_Center.wav
 
 ## Usage
 
-### Registering Cards
+### Registering Tags
 
 SSH into the Pi and run the registration script:
 
@@ -64,7 +64,7 @@ cd /home/pi/storybox
 sudo venv/bin/python src/register.py
 ```
 
-Follow the prompts to place a card and select an audio file from the `audio/` directory.
+Follow the prompts to place a tag and select an audio file from the `audio/` directory.
 
 ### Adding Audio Files
 
@@ -93,7 +93,7 @@ sudo journalctl -u storybox -f
 
 ## How It Works
 
-The main daemon polls the MFRC522 reader every 200ms. When a card is detected, it looks up the card's UID in `mappings.json`. If a mapping exists, it starts playing the associated audio file via `aplay` through the WM8960 codec. When the card is removed (3 consecutive failed reads for debouncing), playback stops.
+The main daemon polls the MFRC522 reader every 200ms. When a tag is detected, it looks up the tag's UID in `mappings.json`. If a mapping exists, it starts playing the associated audio file via `aplay` through the WM8960 codec. When the tag is removed (3 consecutive failed reads for debouncing), playback stops.
 
 ## Project Structure
 
@@ -101,9 +101,9 @@ The main daemon polls the MFRC522 reader every 200ms. When a card is detected, i
 storybox/
   src/
     storybox.py      # Main daemon
-    register.py      # Card registration utility
+    register.py      # Tag registration utility
   audio/             # WAV files
-  mappings.json      # Card UID to audio file mappings
+  mappings.json      # Tag UID to audio file mappings
   storybox.service   # systemd unit
   install.sh         # Setup script
   requirements.txt   # Python dependencies
