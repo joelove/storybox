@@ -13,7 +13,10 @@ MAPPINGS_FILE = BASE_DIR / "mappings.json"
 AUDIO_DIR = BASE_DIR / "audio"
 ALSA_DEVICE = "hw:1,0"
 POLL_INTERVAL = 0.2
-REMOVAL_THRESHOLD = 3
+REMOVAL_THRESHOLD = 5
+
+MFRC522_RFCFG_REG = 0x26
+MFRC522_MAX_GAIN = 0x70
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -96,6 +99,9 @@ def main() -> None:
     logger.info("Storybox starting")
 
     reader = MFRC522()
+    reader.Write_MFRC522(MFRC522_RFCFG_REG, MFRC522_MAX_GAIN)
+    logger.info("Antenna gain set to maximum (48dB)")
+
     player = AudioPlayer()
     mappings = load_mappings()
     logger.info("Loaded %d card mapping(s)", len(mappings))
