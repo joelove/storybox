@@ -16,7 +16,7 @@ POLL_INTERVAL = 0.2
 REMOVAL_THRESHOLD = 3
 
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG,
     format="%(asctime)s [%(levelname)s] %(message)s",
 )
 logger = logging.getLogger("storybox")
@@ -79,13 +79,17 @@ def uid_to_string(uid: list[int]) -> str:
 
 
 def read_card(reader: MFRC522) -> str | None:
-    (status, _) = reader.MFRC522_Request(reader.PICC_REQIDL)
+    (status, tag_type) = reader.MFRC522_Request(reader.PICC_REQIDL)
     if status != reader.MI_OK:
         return None
+    logger.debug("Card present (tag_type=%s)", tag_type)
     (status, uid) = reader.MFRC522_Anticoll()
     if status != reader.MI_OK:
+        logger.debug("Anticollision failed")
         return None
-    return uid_to_string(uid)
+    uid_str = uid_to_string(uid)
+    logger.debug("Read UID: %s", uid_str)
+    return uid_str
 
 
 def main() -> None:
@@ -116,8 +120,10 @@ def main() -> None:
                 audio_file = mappings.get(uid)
                 if audio_file:
                     if player.current_file != audio_file:
+                        logger.debug("Mapped UID %s -> %s", uid, audio_file)
                         player.play(audio_file)
                     elif not player.is_playing:
+                        logger.debug("Restarting finished playback for %s", audio_file)
                         player.play(audio_file)
                 else:
                     logger.debug("Unknown card: %s", uid)
