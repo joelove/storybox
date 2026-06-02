@@ -17,6 +17,7 @@ REMOVAL_THRESHOLD = 5
 
 MFRC522_RFCFG_REG = 0x26
 MFRC522_GAIN = 0x50
+MFRC522_TX_CONTROL_REG = 0x14
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -82,6 +83,11 @@ def uid_to_string(uid: list[int]) -> str:
 
 
 def read_card(reader: MFRC522) -> str | None:
+    reader.Write_MFRC522(MFRC522_TX_CONTROL_REG, 0x00)
+    time.sleep(0.05)
+    reader.Write_MFRC522(MFRC522_TX_CONTROL_REG, 0x03)
+    time.sleep(0.05)
+
     (status, tag_type) = reader.MFRC522_Request(reader.PICC_REQALL)
     if status != reader.MI_OK:
         return None
