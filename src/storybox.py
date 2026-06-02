@@ -16,7 +16,7 @@ POLL_INTERVAL = 0.2
 REMOVAL_THRESHOLD = 5
 
 MFRC522_RFCFG_REG = 0x26
-MFRC522_MAX_GAIN = 0x70
+MFRC522_GAIN = 0x50
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -99,8 +99,8 @@ def main() -> None:
     logger.info("Storybox starting")
 
     reader = MFRC522()
-    reader.Write_MFRC522(MFRC522_RFCFG_REG, MFRC522_MAX_GAIN)
-    logger.info("Antenna gain set to maximum (48dB)")
+    reader.Write_MFRC522(MFRC522_RFCFG_REG, MFRC522_GAIN)
+    logger.info("Antenna gain set to 38dB")
 
     player = AudioPlayer()
     mappings = load_mappings()
