@@ -82,7 +82,7 @@ def uid_to_string(uid: list[int]) -> str:
 
 
 def read_card(reader: MFRC522) -> str | None:
-    (status, tag_type) = reader.MFRC522_Request(reader.PICC_REQIDL)
+    (status, tag_type) = reader.MFRC522_Request(reader.PICC_REQALL)
     if status != reader.MI_OK:
         return None
     logger.debug("Card present (tag_type=%s)", tag_type)
@@ -92,6 +92,7 @@ def read_card(reader: MFRC522) -> str | None:
         return None
     uid_str = uid_to_string(uid)
     logger.debug("Read UID: %s", uid_str)
+    reader.MFRC522_StopCrypto1()
     return uid_str
 
 
